@@ -1,0 +1,127 @@
+body {
+    margin: 0%;
+    background-color: rgb(46, 46, 46);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 100px;
+    background-color: rgb(22, 22, 22);
+    height: 100px;
+    margin-bottom: 20px;
+}
+
+.nav-bar {
+    display: flex;
+    gap: 7px;
+    
+}
+
+.submit-btn {
+    margin-bottom: 30px;
+    border-radius: 10px;
+    color: white;
+    background-color: rgb(34, 82, 121);
+    padding: 5px;
+    border: white solid 2px;
+}
+
+.nav-bar a {
+    color: steelblue;
+}
+
+input {
+    width: 20%;
+    border-radius: 10px;
+padding: 3px;
+}
+
+header h1 {
+    color: steelblue;
+}
+
+.book-preview {
+    background-color: rgb(252, 214, 164);
+    /* padding: 15px; */
+}
+
+/* .book-list {
+ */
+/* } */
+
+.book-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.book-preview img {
+    width: 320px;
+    margin: 15px;
+}
+
+.book-preview-container {
+    font-size: 120%;
+    font-weight: bold;
+    padding: 10px;
+    
+    
+    max-width: 350px;
+    background-color: rgb(175, 50, 0);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.book-filter {
+    text-align: center;
+}
+
+.book-list {
+    max-width: 80vw;
+    margin: 0 auto;
+}
+
+.hide {
+    display: none;
+}
+
+.book-details {
+    background-color: steelblue;
+    color: aliceblue;
+    text-align: center;
+    padding: 10px;
+}
+
+.close-btn {
+    border-radius: 50%;
+    color: white;
+    background-color: rgb(34, 82, 121);
+    padding: 5px;
+    width: 30px;
+    border: white solid 2px;
+
+}
+
+.review-box {
+    background-color: white;
+    border-radius: 10px;
+    border: solid 5px  rgb(34, 82, 121);
+    color: steelblue;
+    width:500px ;
+    margin-bottom: 50px;
+    display: inline-block;
+}
+
+.home-page {
+    text-align: center;
+    color: steelblue;
+    font-size: 150%;
+}
