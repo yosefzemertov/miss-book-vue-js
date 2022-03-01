@@ -46,6 +46,9 @@ export default {
                 return
             }else {
                 this.$emit('save',this.review)
+                this.review.review = '';
+                this.review.name = 'book reader';
+                this.review.id = new Date()%122220;
             }
         }
     },

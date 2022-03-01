@@ -21,6 +21,8 @@ export default {
       <button class="close-btn" @click="removeReview(review.id ,book.id)">x</button>
     </div>
     <review-add @save="save"></review-add>
+    <router-link :to="'/book/'+book.nextBookId">next Book</router-link> ||
+    <router-link :to="'/book/'+book.prevBookId">prev Book</router-link><br>
     <button @click="closeDetails">return</button>
       
       
@@ -37,12 +39,12 @@ export default {
     };
   },
   created() {
-    const id = this.$route.params.bookId;
-    bookService.get(id).then((book) => {
-      this.book = book;
-      this.reviews = book.reviews;
-      console.log();
-    });
+    // const id = this.$route.params.bookId;
+    // bookService.get(id).then((book) => {
+    //   this.book = book;
+    //   this.reviews = book.reviews;
+    //   console.log();
+    // });
   },
   methods: {
     closeDetails() {
@@ -54,6 +56,13 @@ export default {
         this.reviews = book.reviews;
       });
     },
+    loadBook(){
+      bookService.get(this.bookId)
+      .then(book => {
+        this.book = book
+        this.reviews = book.reviews;
+      })
+    },
     removeReview(reviewId, bookId) {
       bookService.removeReview(reviewId, bookId).then((book) => {
         this.book = book;
@@ -62,14 +71,26 @@ export default {
     },
   },
   computed: {
+    bookId(){
+      return this.$route.params.bookId;
+    },
     bookImgUrl() {
       return this.book.thumbnail;
     },
     getCurrencyIcon() {
+      if(typeof (this.book.listPrice.amount) !== 'number') return this.book.listPrice.amount
       return new Intl.NumberFormat(this.book.language, {
         style: "currency",
         currency: this.book.listPrice.currencyCode,
       }).format(this.book.listPrice.amount);
     },
   },
+  watch : {
+    bookId : {
+      handler(){
+        this.loadBook()
+      },
+      immediate : true,
+    }
+  }
 };

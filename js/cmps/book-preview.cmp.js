@@ -19,6 +19,7 @@ computed:{
         return this.book.thumbnail
     },
     getCurrencyIcon(){
+        if(typeof (this.book.listPrice.amount) !== 'number') return this.book.listPrice.amount
         return new Intl.NumberFormat(this.book.language, { style: 'currency', currency: this.book.listPrice.currencyCode}).format(this.book.listPrice.amount)
     }
 },

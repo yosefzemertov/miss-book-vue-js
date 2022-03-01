@@ -125,3 +125,9 @@ header h1 {
     color: steelblue;
     font-size: 150%;
 }
+
+.book-add {
+    background-color: slateblue;
+    text-align: center;
+    padding: 25px;
+}

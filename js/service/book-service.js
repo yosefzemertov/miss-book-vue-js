@@ -1,7 +1,10 @@
 import { utilService } from "../service/util-servuce.js";
 import { storageService } from "./async-storage-service.js";
-
+const url =
+  `https://www.googleapis.com/books/v1/volumes?printType=books&q=effective%20javascript`;
 const BOOKS_KEY = "books";
+const SEARCH_KEY = "search";
+var gCache;
 _createBooks();
 
 export const bookService = {
@@ -11,6 +14,8 @@ export const bookService = {
   get,
   addReview,
   removeReview,
+  getBooks,
+  addBook,
   // getEmptyCar
 };
 
@@ -22,21 +27,24 @@ function remove(bookId) {
   return storageService.remove(BOOKS_KEY, bookId);
 }
 
-function get(bookId){
-  return storageService.get(BOOKS_KEY,bookId);
+function get(bookId) {
+  return storageService.get(BOOKS_KEY, bookId)
+  .then(book => {
+    return _setNextPrevBookId(book)
+  })
 }
 
 function save(book) {
-  return storageService.save(BOOKS_KEY,book);
+  return storageService.save(BOOKS_KEY, book);
 }
 
-function addReview(bookId,review) {
-  return storageService.adReview(bookId,review,BOOKS_KEY)
+function addReview(bookId, review) {
+  return storageService.adReview(bookId, review, BOOKS_KEY);
 }
-     
-     function removeReview(reviewId,bookId) {
-       return storageService.removeReview(reviewId,bookId,BOOKS_KEY)
-     }
+
+function removeReview(reviewId, bookId) {
+  return storageService.removeReview(reviewId, bookId, BOOKS_KEY);
+}
 // function getEmptyCar() {
 //     return {
 //         id: '',
@@ -44,6 +52,55 @@ function addReview(bookId,review) {
 //         maxSpeed: 0
 //     };
 // }
+
+function getBooks(searchBook) {
+  if (gCache) {
+    console.log("local");
+    return Promise.resolve(gCache);
+  } else {
+    return axios.get(`https://www.googleapis.com/books/v1/volumes?printType=books&q=${searchBook}`).then((books) => {
+      console.log('axios');       
+      return books.data;
+    });
+  }
+}
+
+function _setNextPrevBookId(book) {
+  return storageService.query(BOOKS_KEY).then(books => {
+      const bookIdx = books.findIndex(currBook => currBook.id === book.id)
+      book.nextBookId = (books[bookIdx+1])? books[bookIdx+1].id : books[0].id
+      book.prevBookId = (books[bookIdx-1])? books[bookIdx-1].id : books[books.length-1].id
+      return book
+  })
+}
+
+
+
+function addBook(book) {
+  const convertedBook = bookConvert(book);
+  return storageService.post(BOOKS_KEY,convertedBook)
+}
+
+function bookConvert(book) {
+
+  return {
+    id: book.id,
+    title:book.volumeInfo.title,
+    subtitle:book.volumeInfo.subtitle,
+    authors:book.volumeInfo.authors,
+    publishedDate:book.volumeInfo.publishedDate,
+    description:book.volumeInfo.description,
+    pageCount:book.volumeInfo.pageCount,
+    categories:book.volumeInfo.categories,
+    thumbnail:book.volumeInfo.imageLinks.thumbnail,
+    language:book.volumeInfo.language,
+    listPrice: {
+      amount:book.saleInfo.saleability,
+      currencyCode:book.saleInfo.country,
+      isOnSale:false
+    }
+  }
+};
 
 function _createBooks() {
   let books = utilService.loadFromStorage(BOOKS_KEY);
